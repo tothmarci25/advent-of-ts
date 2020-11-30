@@ -1,2 +1,2 @@
 # advent-of-code
-Solutions for Advent of Code
+:christmas_tree: Solutions for Advent of Code
