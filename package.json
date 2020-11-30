@@ -8,7 +8,8 @@
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "unit": "ts-node ./node_modules/jasmine/bin/jasmine --config=jasmine.json",
-    "test": "npm run lint && npm run unit"
+    "test": "npm run lint && npm run unit",
+    "start": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
