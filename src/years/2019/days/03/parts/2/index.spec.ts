@@ -1,6 +1,6 @@
 import solve, { processLines } from ".";
 
-describe("Year 2019 - Day 03 - Part 1", () => {
+describe("Year 2019 - Day 03 - Part 2", () => {
   describe("#processLines", () => {
     [
       {
@@ -8,14 +8,14 @@ describe("Year 2019 - Day 03 - Part 1", () => {
           ["R8", "U5", "L5", "D3"],
           ["U7", "R6", "D4", "L4"],
         ],
-        expected: 6,
+        expected: 30,
       },
       {
         input: [
           ["R75", "D30", "R83", "U83", "L12", "D49", "R71", "U7", "L72"],
           ["U62", "R66", "U55", "R34", "D71", "R55", "D58", "R83"],
         ],
-        expected: 159,
+        expected: 610,
       },
       {
         input: [
@@ -34,7 +34,7 @@ describe("Year 2019 - Day 03 - Part 1", () => {
           ],
           ["U98", "R91", "D20", "R16", "D67", "R40", "U7", "R15", "U6", "R7"],
         ],
-        expected: 135,
+        expected: 410,
       },
     ].forEach((testCase) => {
       it("should calculate result array", () => {
@@ -45,7 +45,7 @@ describe("Year 2019 - Day 03 - Part 1", () => {
 
   describe("#default", () => {
     it("should return solution", async () => {
-      expect(await solve()).toEqual(1431);
+      expect(await solve()).toEqual(48012);
     });
   });
 });
