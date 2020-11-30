@@ -1,2 +1,2 @@
-# advent-of-code
-:christmas_tree: Solutions for Advent of Code
+# advent-of-code-ts
+:christmas_tree: TypeScript Solutions for Advent of Code
