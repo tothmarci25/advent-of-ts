@@ -1,6 +1,5 @@
 import { join } from "path";
-import readline from "readline";
-import { createReadStream } from "fs";
+import { readLines } from "../../../../../../lib/readLines";
 
 export type ParsedLine = {
   min: number;
@@ -30,17 +29,12 @@ export const countOccurence = (letter: string, password: string): number => {
 export default async (): Promise<number> => {
   const inputPath = join(__dirname, "../../input.txt");
   let result = 0;
-  return new Promise((resolve) => {
-    const input = readline.createInterface({
-      input: createReadStream(inputPath, { encoding: "utf8" }),
-    });
-    input.on("line", (line) => {
-      const parsedLine = parseLine(line);
-      const count = countOccurence(parsedLine.value, parsedLine.password);
-      if (count >= parsedLine.min && count <= parsedLine.max) {
-        result += 1;
-      }
-    });
-    input.on("close", () => resolve(result));
+  await readLines(inputPath, (line) => {
+    const parsedLine = parseLine(line);
+    const count = countOccurence(parsedLine.value, parsedLine.password);
+    if (count >= parsedLine.min && count <= parsedLine.max) {
+      result += 1;
+    }
   });
+  return result;
 };

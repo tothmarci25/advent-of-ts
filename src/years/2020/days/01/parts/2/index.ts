@@ -1,12 +1,5 @@
-import { readFileSync } from "fs";
 import { join } from "path";
-
-export const readInput = (filePath: string): number[] => {
-  const file = readFileSync(filePath, { encoding: "utf8" });
-  const lines = file.split("\n").map((line) => parseInt(line));
-  lines.pop();
-  return lines;
-};
+import { readInput } from "../1";
 
 export const processInput = (input: number[]): number | void => {
   for (let i = 0; i < input.length; i++) {
