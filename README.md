@@ -1,5 +1,5 @@
-# advent-of-code-ts
-:christmas_tree: TypeScript Solutions for Advent of Code
+# :christmas_tree: advent-of-code-ts
+> TypeScript Solutions for Advent of Code
 
 ## Setup
 ```
