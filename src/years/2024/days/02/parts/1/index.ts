@@ -16,7 +16,7 @@ export default async (): Promise<number> => {
 function isSafeReport(levels: string[]): boolean {
   const diffs = getLevelDiffs(levels);
   return (
-    isAtLeastOne(diffs) &&
+    isAllAtLeastOne(diffs) &&
     isAllAtMostThree(diffs) &&
     (isAllDecreasing(diffs) || isAllIncreasing(diffs))
   );
@@ -31,7 +31,7 @@ function getLevelDiffs(levels: string[]): number[] {
   return diffs;
 }
 
-function isAtLeastOne(diffs: number[]): boolean {
+function isAllAtLeastOne(diffs: number[]): boolean {
   return diffs.every((diff) => Math.abs(diff) >= 1);
 }
 
