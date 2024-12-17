@@ -15,29 +15,24 @@ export default async (): Promise<number> => {
 
 export function processLines(lines: string[]): number {
   let result = 0;
-  for (let x = 0; x < lines.length; x++) {
-    for (let y = 0; y < lines[x].length; y++) {
+  for (let x = 1; x < lines.length - 1; x++) {
+    for (let y = 1; y < lines[x].length - 1; y++) {
       result += checkEightDirections([x, y], lines);
     }
   }
   return result;
 }
 
-function checkEightDirections(position: Position, lines: string[]): number {
-  const target = "XMAS";
-  const directions: Position[] = [
-    [0, -1], // top
-    [1, -1], // top right
-    [1, 0], // right
-    [1, 1], // bottom right
-    [0, 1], // bottom
-    [-1, 1], // bottom left
-    [-1, 0], // left
-    [-1, -1], // top left
-  ];
-  return directions.reduce((result, direction) => {
-    return result + checkDirections(position, direction, target, lines);
-  }, 0);
+function checkEightDirections([x, y]: Position, lines: string[]): number {
+  if (
+    (checkDirections([x - 1, y - 1], [1, 1], "MAS", lines) ||
+      checkDirections([x - 1, y - 1], [1, 1], "SAM", lines)) &&
+    (checkDirections([x - 1, y + 1], [1, -1], "MAS", lines) ||
+      checkDirections([x - 1, y + 1], [1, -1], "SAM", lines))
+  ) {
+    return 1;
+  }
+  return 0;
 }
 
 function checkDirections(
