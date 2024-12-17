@@ -15,15 +15,21 @@ export default async (): Promise<number> => {
 export function processLine(line: string): number {
   let result = 0;
   const fixedLine = `do()${line}don't()`;
-  const regex = /do\(\)((?:(?!do\(|don't\().)*mul\((\d+),(\d+)\))+/gs;
-  const innerRegex = /mul\((\d+),(\d+)\)/g;
-
-  for (const match of fixedLine.matchAll(regex)) {
-    const innerMatches = match[0].matchAll(innerRegex);
-    for (const m of innerMatches) {
-      const [, x, y] = m;
+  for (const doMatch of parseDo(fixedLine)) {
+    for (const mulMatch of parseMul(doMatch[0])) {
+      const [, x, y] = mulMatch;
       result += parseInt(x) * parseInt(y);
     }
   }
   return result;
+}
+
+function parseDo(line: string) {
+  const doRegex = /do\(\)(.*?)don't\(\)/g;
+  return line.matchAll(doRegex);
+}
+
+function parseMul(line: string) {
+  const mulRegex = /mul\((\d+),(\d+)\)/g;
+  return line.matchAll(mulRegex);
 }
