@@ -4,12 +4,11 @@ import { readLines } from "../../../../../../lib/readLines-promise";
 const inputPath = join(__dirname, "../../input.txt");
 
 export default async (): Promise<number> => {
-  let result = 0;
-  const lines = readLines(inputPath);
-  for await (const line of lines) {
-    result += processLine(line);
+  let concatLine = "";
+  for await (const line of readLines(inputPath)) {
+    concatLine += line;
   }
-  return result;
+  return processLine(concatLine);
 };
 
 export function processLine(line: string): number {
