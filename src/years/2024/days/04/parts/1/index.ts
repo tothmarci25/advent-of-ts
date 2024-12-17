@@ -1,6 +1,8 @@
 import { join } from "path";
 import { readLines } from "../../../../../../lib/readLines-promise";
 
+type Position = [number, number];
+
 const inputPath = join(__dirname, "../../input.txt");
 
 export default async (): Promise<number> => {
@@ -15,45 +17,48 @@ export function processLines(lines: string[]): number {
   let result = 0;
   for (let x = 0; x < lines.length; x++) {
     for (let y = 0; y < lines[x].length; y++) {
-      if (lines[x][y] === "X") {
-        result += checkEightDirections(x, y, lines);
-      }
+      result += checkEightDirections([x, y], lines);
     }
   }
   return result;
 }
 
-function checkEightDirections(x: number, y: number, lines: string[]) {
-  let result = 0;
-  result += checkDirections(x, y, 0, -1, "MAS", lines); // top
-  result += checkDirections(x, y, 1, -1, "MAS", lines); // top right
-  result += checkDirections(x, y, 1, 0, "MAS", lines); // right
-  result += checkDirections(x, y, 1, 1, "MAS", lines); // bottom right
-  result += checkDirections(x, y, 0, 1, "MAS", lines); // bottom
-  result += checkDirections(x, y, -1, 1, "MAS", lines); // bottom left
-  result += checkDirections(x, y, -1, 0, "MAS", lines); // left
-  result += checkDirections(x, y, -1, -1, "MAS", lines); // top left
-  return result;
+function checkEightDirections(position: Position, lines: string[]) {
+  const target = "XMAS";
+  const directions: Position[] = [
+    [0, -1], // top
+    [1, -1], // top right
+    [1, 0], // right
+    [1, 1], // bottom right
+    [0, 1], // bottom
+    [-1, 1], // bottom left
+    [-1, 0], // left
+    [-1, -1], // top left
+  ];
+  return directions.reduce((result, direction) => {
+    return result + checkDirections(position, direction, target, lines);
+  }, 0);
 }
 
 function checkDirections(
-  x: number,
-  y: number,
-  dx: number,
-  dy: number,
+  [x, y]: Position,
+  [dx, dy]: Position,
   target: string,
   lines: string[]
 ): number {
   if (target.length <= 0) {
     return 1;
   }
-  const newX = x + dx;
-  const newY = y + dy;
-  if (newX < 0 || newX >= lines.length || newY < 0 || newY >= lines[x].length) {
+  if (x < 0 || x >= lines.length || y < 0 || y >= lines[x].length) {
     return 0;
   }
-  if (lines[newX][newY] !== target[0]) {
+  if (lines[x][y] !== target[0]) {
     return 0;
   }
-  return checkDirections(newX, newY, dx, dy, target.substring(1), lines);
+  return checkDirections(
+    [x + dx, y + dy],
+    [dx, dy],
+    target.substring(1),
+    lines
+  );
 }
