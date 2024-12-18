@@ -61,7 +61,7 @@ describe("Year 2024 - Day 05 - Part 2", () => {
 
   describe("#default", () => {
     it("should return solution", async () => {
-      expect(await solve()).toEqual(4814);
+      expect(await solve()).toEqual(5448);
     });
   });
 });

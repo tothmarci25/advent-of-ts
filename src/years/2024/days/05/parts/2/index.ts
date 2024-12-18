@@ -20,13 +20,23 @@ export default async (): Promise<number> => {
   return result;
 };
 
-export function processUpdate(line: number[], rules: Rule[]): number {
+export function processUpdate(
+  line: number[],
+  rules: Rule[],
+  hasError = false
+): number {
   for (const [a, b] of rules) {
     const indexOfA = line.indexOf(a);
     const indexOfB = line.indexOf(b);
     if (indexOfA !== -1 && indexOfB !== -1 && indexOfA > indexOfB) {
-      return 0;
+      const newLine = [...line];
+      newLine[indexOfA] = b;
+      newLine[indexOfB] = a;
+      return processUpdate(newLine, rules, true);
     }
   }
-  return line[(line.length - 1) / 2];
+  if (hasError) {
+    return line[(line.length - 1) / 2];
+  }
+  return 0;
 }
