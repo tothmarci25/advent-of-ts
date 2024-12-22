@@ -2,77 +2,74 @@ import { join } from "path";
 import { readLines } from "../../../../../../lib/readLines-promise";
 
 type Position = [number, number];
-type Direction = [0, -1] | [1, 0] | [0, 1] | [-1, 0];
+
 type Guard = {
   position: Position;
-  direction: Direction;
+  directionIndex: number;
 };
 
-export const DIRECTION: { [key: string]: Direction } = {
-  UP: [0, -1],
-  RIGHT: [1, 0],
-  DOWN: [0, 1],
-  LEFT: [-1, 0],
-};
+const DIRECTIONS: Position[] = [
+  [-1, 0], // up
+  [0, 1], // right
+  [1, 0], // down
+  [0, -1], // left
+];
 
 const inputPath = join(__dirname, "../../input.txt");
 
 export default async (): Promise<number> => {
   const guard: Guard = {
     position: [-1, -1],
-    direction: DIRECTION.UP,
+    directionIndex: 0,
   };
-  const visitedPositions = new Set<string>();
+
+  const touchedPositions = new Set<string>();
+
   const lines: string[] = [];
+
   for await (const line of readLines(inputPath)) {
-    const guardXPosition = line.indexOf("^");
-    if (guardXPosition !== -1) {
-      guard.position = [guardXPosition, lines.length];
-      visitedPositions.add(guard.position.join(","));
+    const guardYPosition = line.indexOf("^");
+    if (guardYPosition !== -1) {
+      guard.position = [lines.length, guardYPosition];
+      touchedPositions.add(guard.position.join(","));
     }
     lines.push(line);
   }
-  return processLines(lines, guard, visitedPositions);
+
+  return getTouchedPositionsCount(lines, guard, touchedPositions);
 };
 
-export function processLines(
+export function getNextDirectionIndex(currentDirectionIndex: number): number {
+  return currentDirectionIndex + 1 === DIRECTIONS.length
+    ? 0
+    : currentDirectionIndex + 1;
+}
+
+function getTouchedPositionsCount(
   lines: string[],
   guard: Guard,
-  visitedPositions: Set<string>
+  touchedPositions: Set<string>
 ): number {
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const nextPosition = getNextPosition(guard);
+  let hasFinished = false;
+
+  while (!hasFinished) {
+    const [x, y] = guard.position;
+    const [dx, dy] = DIRECTIONS[guard.directionIndex];
+    const nextPosition: Position = [x + dx, y + dy];
     const [nx, ny] = nextPosition;
     if (nx < 0 || nx >= lines[0].length || ny < 0 || ny >= lines.length) {
+      hasFinished = true;
       break;
     }
-    const nextChar = lines[ny][nx];
+    const nextChar = lines[nx][ny];
     if (nextChar === "#") {
-      guard.direction = getNextDirection(guard.direction);
+      const nextDirectionIndex = getNextDirectionIndex(guard.directionIndex);
+      guard.directionIndex = nextDirectionIndex;
     } else {
       guard.position = nextPosition;
-      visitedPositions.add(nextPosition.join(","));
+      touchedPositions.add(nextPosition.join(","));
     }
   }
-  return visitedPositions.size;
-}
 
-export function getNextPosition(guard: Guard): Position {
-  const [x, y] = guard.position;
-  const [dx, dy] = guard.direction;
-  return [x + dx, y + dy];
-}
-
-export function getNextDirection(direction: Direction): Direction {
-  if (direction === DIRECTION.UP) {
-    return DIRECTION.RIGHT;
-  }
-  if (direction === DIRECTION.RIGHT) {
-    return DIRECTION.DOWN;
-  }
-  if (direction === DIRECTION.DOWN) {
-    return DIRECTION.LEFT;
-  }
-  return DIRECTION.UP;
+  return touchedPositions.size;
 }
